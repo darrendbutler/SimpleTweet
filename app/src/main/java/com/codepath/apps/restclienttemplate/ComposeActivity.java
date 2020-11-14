@@ -3,11 +3,15 @@ package com.codepath.apps.restclienttemplate;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -25,6 +29,7 @@ public class ComposeActivity extends AppCompatActivity {
 
     EditText etCompose;
     Button btnTweet;
+    TextView tvLimit;
 
     TwitterClient client;
 
@@ -36,6 +41,35 @@ public class ComposeActivity extends AppCompatActivity {
 
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
+        tvLimit = findViewById(R.id.tvLimit);
+
+
+        //Set addTextChanged Listener to character count
+        etCompose.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tvLimit.setText(String.valueOf(s.length()));
+
+                if(s.length() > MAX_TWEET_LEGNTH){
+                    tvLimit.setTextColor(Color.parseColor("#FF0000"));
+                    btnTweet.setEnabled(false);
+                } else{
+                    tvLimit.setTextColor(Color.parseColor("#000000"));
+                    btnTweet.setEnabled(true);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         //Set click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +111,7 @@ public class ComposeActivity extends AppCompatActivity {
                 });
             }
         });
-
-
     }
+
+
 }
